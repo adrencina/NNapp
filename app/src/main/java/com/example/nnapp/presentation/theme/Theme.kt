@@ -1,4 +1,4 @@
-package com.example.nnapp.ui.theme
+package com.example.nnapp.presentation.theme
 
 import android.app.Activity
 import android.os.Build
