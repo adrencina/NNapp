@@ -47,11 +47,20 @@ android {
 
 dependencies {
 
+//    implementation(platform(libs.firebase.bom))
+//    implementation(libs.firebase.analytics)
+//    implementation (libs.firebase.auth)
+//    implementation (libs.firebase.firestore)
+//    implementation (libs.firebase.storage)
+
+    // Firebase BOM (Bill of Materials)
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation (libs.firebase.auth)
-    implementation (libs.firebase.firestore)
-    implementation (libs.firebase.storage)
+
+    // Dependencias sin versión explícita
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.auth.ktx)
 
 
     implementation(libs.hilt.android)
