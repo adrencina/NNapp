@@ -1,0 +1,20 @@
+# Ignorar builds y temporales
+build/
+.gradle/
+*.apk
+*.aab
+
+# Ignorar configuraciones del IDE
+.idea/
+*.iml
+
+# Ignorar archivos sensibles
+local.properties
+*.keystore
+google-services.json
+
+# NO ignorar código fuente, recursos, o archivos de configuración de Gradle
+!app/src/main/**
+!gradle/
+!*.gradle.kts
+!gradle.properties
