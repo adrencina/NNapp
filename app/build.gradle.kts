@@ -47,12 +47,6 @@ android {
 
 dependencies {
 
-//    implementation(platform(libs.firebase.bom))
-//    implementation(libs.firebase.analytics)
-//    implementation (libs.firebase.auth)
-//    implementation (libs.firebase.firestore)
-//    implementation (libs.firebase.storage)
-
     // Firebase BOM (Bill of Materials)
     implementation(platform(libs.firebase.bom))
 
@@ -64,7 +58,12 @@ dependencies {
 
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.navigation.compose)
     kapt(libs.hilt.android.compiler)
+
+    implementation(libs.hiltNavigationCompose)
 
 
     implementation(libs.androidx.core.ktx)

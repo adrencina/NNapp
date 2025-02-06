@@ -1,4 +1,4 @@
-package com.example.nnapp.presentation.theme
+package com.example.nnapp.utils.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

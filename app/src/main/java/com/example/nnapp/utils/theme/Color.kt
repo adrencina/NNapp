@@ -1,4 +1,4 @@
-package com.example.nnapp.presentation.theme
+package com.example.nnapp.utils.theme
 
 import androidx.compose.ui.graphics.Color
 
