@@ -32,6 +32,14 @@ fun HomeScreen(navController: NavController) {
         }) {
             Text("Cerrar Sesión")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = {
+            navController.navigate("budgets")
+        }) {
+            Text("Ver Presupuestos")
+        }
     }
 }
 

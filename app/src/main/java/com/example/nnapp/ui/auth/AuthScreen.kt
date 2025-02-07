@@ -60,7 +60,13 @@ fun AuthScreen(viewModel: AuthViewModel = hiltViewModel(), navController: NavCon
         }
 
         if (errorMessage?.isNotEmpty() == true) {
-            errorMessage?.let { Text(text = it, color = Color.Red, modifier = Modifier.padding(top = 8.dp)) }
+            errorMessage?.let {
+                Text(
+                    text = it,
+                    color = Color.Red,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
         }
     }
 }

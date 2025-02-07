@@ -6,9 +6,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.nnapp.ui.auth.AuthScreen
+import com.example.nnapp.ui.budget.BudgetScreen
 import com.example.nnapp.ui.home.HomeScreen
 import com.example.nnapp.ui.splash.SplashScreen
 import com.example.nnapp.ui.viewmodel.AuthViewModel
+import com.example.nnapp.ui.viewmodel.BudgetViewModel
 
 @Composable
 fun AppNavigation() {
@@ -21,5 +23,10 @@ fun AppNavigation() {
             AuthScreen(viewModel = authViewModel, navController = navController)
         }
         composable("home") { HomeScreen(navController) }
+        composable("budgets") {
+            val budgetViewModel: BudgetViewModel = hiltViewModel()
+            BudgetScreen(viewModel = budgetViewModel, navController = navController)
+        }
+
     }
 }

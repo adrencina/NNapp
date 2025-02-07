@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.filament.android)
     kapt(libs.hilt.android.compiler)
 
     implementation(libs.hiltNavigationCompose)
