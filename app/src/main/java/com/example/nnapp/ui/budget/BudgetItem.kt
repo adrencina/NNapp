@@ -11,17 +11,21 @@ import androidx.compose.ui.unit.sp
 import com.example.nnapp.data.model.Budget
 
 @Composable
-fun BudgetItem(budget: Budget, onDelete: () -> Unit) {
+fun BudgetItem(
+    budget: Budget,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = budget.name,
+                text = budget.clientName,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -29,11 +33,16 @@ fun BudgetItem(budget: Budget, onDelete: () -> Unit) {
                 text = "Creado el: ${budget.creationDate}",
                 fontSize = 14.sp
             )
-            Button(
-                onClick = onDelete,
-                modifier = Modifier.padding(top = 8.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Eliminar")
+                Button(onClick = onEdit) {
+                    Text("Editar")
+                }
+                Button(onClick = onDelete) {
+                    Text("Eliminar")
+                }
             }
         }
     }

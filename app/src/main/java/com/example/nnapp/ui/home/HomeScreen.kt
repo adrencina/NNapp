@@ -20,26 +20,30 @@ fun HomeScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Bienvenido a Home")
-
+        Text("Bienvenido a Home", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            FirebaseAuth.getInstance().signOut()
-            navController.navigate("auth") {
-                popUpTo("home") { inclusive = true }
-            }
-        }) {
-            Text("Cerrar Sesión")
-        }
-
+        LogoutButton(navController)
         Spacer(modifier = Modifier.height(16.dp))
+        UnconfirmedBudgetsButton(navController)
+    }
+}
 
-        Button(onClick = {
-            navController.navigate("budgets")
-        }) {
-            Text("Ver Presupuestos")
+@Composable
+fun LogoutButton(navController: NavController) {
+    Button(onClick = {
+        FirebaseAuth.getInstance().signOut()
+        navController.navigate("auth") {
+            popUpTo("home") { inclusive = true }
         }
+    }) {
+        Text("Cerrar Sesión")
+    }
+}
+
+@Composable
+fun UnconfirmedBudgetsButton(navController: NavController) {
+    Button(onClick = { navController.navigate("unconfirmedBudgets") }) {
+        Text("Ver Presupuestos sin Confirmar")
     }
 }
 

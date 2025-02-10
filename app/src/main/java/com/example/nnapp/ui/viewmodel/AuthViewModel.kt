@@ -14,7 +14,7 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     val authState: LiveData<Boolean> get() = _authState
 
     private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage:   LiveData<String?> get() = _errorMessage
+    val errorMessage: LiveData<String?> get() = _errorMessage
 
     fun register(email: String, password: String) {
         authRepository.registerUser(email, password) { success, error ->
@@ -43,5 +43,10 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
 
     fun checkUserSession() {
         _authState.value = authRepository.getCurrentUser() != null
+    }
+
+    // Método agregado para establecer un mensaje de error
+    fun setError(message: String) {
+        _errorMessage.value = message
     }
 }

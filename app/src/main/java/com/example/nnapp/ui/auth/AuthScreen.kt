@@ -51,11 +51,25 @@ fun AuthScreen(viewModel: AuthViewModel = hiltViewModel(), navController: NavCon
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = { viewModel.login(email, password) }) {
+        Button(onClick = {
+            // Validar que email y password no estén vacíos antes de iniciar sesión
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                viewModel.login(email, password)
+            } else {
+                viewModel.setError("El correo y la contraseña son obligatorios")
+            }
+        }) {
             Text("Iniciar Sesión")
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = { viewModel.register(email, password) }) {
+        Button(onClick = {
+            // Validar que email y password no estén vacíos antes de registrarse
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                viewModel.register(email, password)
+            } else {
+                viewModel.setError("El correo y la contraseña son obligatorios")
+            }
+        }) {
             Text("Registrarse")
         }
 

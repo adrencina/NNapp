@@ -3,11 +3,9 @@ package com.example.nnapp.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nnapp.data.model.Budget
-import com.example.nnapp.data.model.Material
 import com.example.nnapp.data.repository.BudgetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +17,11 @@ class BudgetViewModel @Inject constructor(
     private val _budgets = MutableStateFlow<List<Budget>>(emptyList())
     val budgets: StateFlow<List<Budget>> = _budgets
 
+    // Flujo de presupuestos sin confirmar, ordenados por fecha (más recientes primero)
+    val unconfirmedBudgets: StateFlow<List<Budget>> = _budgets
+        .map { budgets -> budgets.filter { !it.confirmed }.sortedByDescending { it.creationDate } }
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
     init {
         loadBudgets()
     }
@@ -29,32 +32,15 @@ class BudgetViewModel @Inject constructor(
         }
     }
 
-    fun addBudget(budget: Budget) {
+    fun saveBudget(budget: Budget) {
         viewModelScope.launch {
-            repository.createBudget(budget)
+            if (budget.id.isEmpty()) repository.createBudget(budget) else repository.updateBudget(budget)
             loadBudgets()
         }
     }
 
-    fun addMaterial(budgetId: String, material: Material) {
-        viewModelScope.launch {
-            repository.addMaterial(budgetId, material)
-            loadBudgets()
-        }
-    }
-
-    fun updateMaterial(budgetId: String, material: Material) {
-        viewModelScope.launch {
-            repository.updateMaterial(budgetId, material)
-            loadBudgets()
-        }
-    }
-
-    fun deleteMaterial(budgetId: String, material: Material) {
-        viewModelScope.launch {
-            repository.deleteMaterial(budgetId, material)
-            loadBudgets()
-        }
+    suspend fun getBudgetById(id: String): Budget? {
+        return repository.getBudgetById(id)
     }
 
     fun deleteBudget(id: String) {
