@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import com.example.nnapp.data.model.Budget
 import com.example.nnapp.data.model.Material
 import com.example.nnapp.ui.viewmodel.BudgetViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -41,6 +42,8 @@ fun BudgetFormScreen(
             materialsList = it.materials
         }
     }
+
+    val scope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(
@@ -93,8 +96,10 @@ fun BudgetFormScreen(
                     confirmed = false,
                     creationDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(java.util.Date())
                 )
-                viewModel.saveBudget(newBudget)
-                navController.popBackStack()
+                scope.launch {
+                    viewModel.saveBudgetSuspend(newBudget)
+                    navController.popBackStack()
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {

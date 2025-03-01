@@ -8,8 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.nnapp.ui.auth.AuthScreen
+import com.example.nnapp.ui.budget.BudgetBoardScreen
 import com.example.nnapp.ui.budget.BudgetFormScreen
-import com.example.nnapp.ui.budget.UnconfirmedBudgetsScreen
 import com.example.nnapp.ui.home.HomeScreen
 import com.example.nnapp.ui.splash.SplashScreen
 import com.example.nnapp.ui.viewmodel.AuthViewModel
@@ -33,9 +33,9 @@ fun AppNavigation() {
         composable(NavigationRoute.Home.route) {
             HomeScreen(navController = navController)
         }
-        composable(NavigationRoute.UnconfirmedBudgets.route) {
+        composable(NavigationRoute.BudgetBoard.route) {
             val budgetViewModel: BudgetViewModel = hiltViewModel()
-            UnconfirmedBudgetsScreen(navController = navController, viewModel = budgetViewModel)
+            BudgetBoardScreen(navController = navController, viewModel = budgetViewModel)
         }
         composable(
             route = NavigationRoute.BudgetForm.route,

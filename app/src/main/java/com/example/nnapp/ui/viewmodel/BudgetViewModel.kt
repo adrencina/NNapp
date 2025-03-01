@@ -23,20 +23,21 @@ class BudgetViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     init {
+        viewModelScope.launch { loadBudgets() }
+    }
+
+    private suspend fun loadBudgets() {
+        _budgets.value = repository.getBudgets()
+    }
+
+    // Función suspend para guardar presupuesto y recargar la lista
+    suspend fun saveBudgetSuspend(budget: Budget) {
+        if (budget.id.isEmpty()) {
+            repository.createBudget(budget)
+        } else {
+            repository.updateBudget(budget)
+        }
         loadBudgets()
-    }
-
-    private fun loadBudgets() {
-        viewModelScope.launch {
-            _budgets.value = repository.getBudgets()
-        }
-    }
-
-    fun saveBudget(budget: Budget) {
-        viewModelScope.launch {
-            if (budget.id.isEmpty()) repository.createBudget(budget) else repository.updateBudget(budget)
-            loadBudgets()
-        }
     }
 
     suspend fun getBudgetById(id: String): Budget? {

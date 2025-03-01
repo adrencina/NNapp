@@ -47,6 +47,16 @@ android {
 
 dependencies {
 
+    //
+    implementation(libs.material3)
+
+    // BOM (Base Open-Source Module)
+    implementation(libs.androidx.material.icons.extended)
+
+
+    // DataStore BOM (Base Open-Source Module)
+    implementation(libs.androidx.datastore.preferences)
+
     // Firebase BOM (Bill of Materials)
     implementation(platform(libs.firebase.bom))
 
@@ -57,6 +67,7 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
 
 
+    // Hilt BOM (Base Open-Source Module)
     implementation(libs.hilt.android)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.runtime.livedata)
