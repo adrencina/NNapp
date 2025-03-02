@@ -3,11 +3,15 @@ package com.example.nnapp.ui.home
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,21 +33,23 @@ fun HomeScreen(navController: NavController) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Inicio") },
+                    title = { Text("Hola Pepe!") },
                     actions = {
+                        IconButton(onClick = {
+                            FirebaseAuth.getInstance().signOut()
+                            navController.navigate("auth") {
+                                popUpTo("home") { inclusive = true }
+                            }
+                        }) {
+                            Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = "Cerrar sesión")
+                        }
                         ToggleThemeButton(isDarkTheme) { isDarkTheme = !isDarkTheme }
                     }
                 )
             },
-            bottomBar = { BottomNavigationBar() }
+            bottomBar = { BottomNavigationBar(navController = navController, selectedRoute = "home") }
         ) { paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
-                Text(
-                    text = "Hola Pepe!",
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(16.dp)
-                )
-
                 // Pestañas superiores
                 val tabs = listOf("PROYECTOS", "PRESUPUESTOS")
                 TabRow(
@@ -60,14 +66,65 @@ fun HomeScreen(navController: NavController) {
                     }
                 }
 
-                // Contenido según la pestaña seleccionada
+                // Contenido dinámico según la pestaña seleccionada
                 when (selectedTabIndex) {
-                    0 -> ProyectosContent()
-                    1 -> PresupuestosContent()
+                    0 -> ContentSection("Proyecto")
+                    1 -> ContentSection("Presupuesto")
                 }
+            }
+        }
+    }
+}
 
-                Spacer(modifier = Modifier.height(16.dp))
-                LogoutButton(navController)
+@Composable
+fun ContentSection(label: String) {
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        // LazyRow - 30% de la pantalla
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.3f)
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(3) { index ->
+                Card(
+                    modifier = Modifier
+                        .width(120.dp)
+                        .height(100.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = CardDefaults.cardElevation(4.dp)
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("$label ${index + 1}", style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
+            }
+        }
+
+        // LazyColumn - espacio restante, mostrando 3 elementos visibles
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(3) { index ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = CardDefaults.cardElevation(4.dp)
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("$label ${index + 1}", style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
             }
         }
     }
@@ -84,94 +141,37 @@ fun ToggleThemeButton(isDarkTheme: Boolean, onToggle: () -> Unit) {
 }
 
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(navController: NavController, selectedRoute: String) {
+    val items = listOf(
+        "home" to R.drawable.home_icon,
+        "projects" to R.drawable.book_icon,
+        "camera" to R.drawable.camera_icon,
+        "chat" to R.drawable.chat_icon,
+        "settings" to R.drawable.settings_icon
+    )
+
     NavigationBar {
-        NavigationBarItem(
-            icon = { Icon(painter = painterResource(R.drawable.home_icon), contentDescription = "Inicio") },
-            label = { Text("Inicio") },
-            selected = true,
-            onClick = { }
-        )
-        NavigationBarItem(
-            icon = { Icon(painter = painterResource(R.drawable.book_icon), contentDescription = "Catálogo") },
-            label = { Text("Catálogo") },
-            selected = false,
-            onClick = { }
-        )
-        NavigationBarItem(
-            icon = { Icon(painter = painterResource(R.drawable.camera_icon), contentDescription = "Cámara") },
-            label = { Text("Cámara") },
-            selected = false,
-            onClick = { }
-        )
-        NavigationBarItem(
-            icon = { Icon(painter = painterResource(R.drawable.chat_icon), contentDescription = "Chat") },
-            label = { Text("Chat") },
-            selected = false,
-            onClick = { }
-        )
-        NavigationBarItem(
-            icon = { Icon(painter = painterResource(R.drawable.settings_icon), contentDescription = "Ajustes") },
-            label = { Text("Ajustes") },
-            selected = false,
-            onClick = { }
-        )
-    }
-}
-
-@Composable
-fun LogoutButton(navController: NavController) {
-    Button(onClick = {
-        FirebaseAuth.getInstance().signOut()
-        navController.navigate("auth") {
-            popUpTo("home") { inclusive = true }
-        }
-    }) {
-        Text("Cerrar Sesión")
-    }
-}
-
-@Composable
-fun ProyectosContent() {
-    LazyColumn(modifier = Modifier.padding(16.dp)) {
-        items(5) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                shape = MaterialTheme.shapes.medium,
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Text(
-                    text = "Proyecto ${it + 1}",
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+        items.forEach { (route, iconRes) ->
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        painter = painterResource(iconRes),
+                        contentDescription = route,
+                        modifier = Modifier.size(25.dp) // Cambia el tamaño del icono
+                    )
+                },
+                selected = selectedRoute == route,
+                onClick = {
+                    navController.navigate(route) {
+                        popUpTo("home") { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
     }
 }
 
-@Composable
-fun PresupuestosContent() {
-    LazyColumn(modifier = Modifier.padding(16.dp)) {
-        items(5) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                shape = MaterialTheme.shapes.medium,
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Text(
-                    text = "Presupuesto ${it + 1}",
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
