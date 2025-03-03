@@ -10,14 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import com.example.nnapp.data.model.Budget
 import com.example.nnapp.ui.navigation.NavigationRoute
 import com.example.nnapp.ui.viewmodel.BudgetViewModel
 
 @Composable
 fun BudgetBoardScreen(
-    navController: NavHostController,
+    navController: NavController,
     viewModel: BudgetViewModel = hiltViewModel()
 ) {
     val budgets by viewModel.budgets.collectAsStateWithLifecycle()

@@ -6,19 +6,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.nnapp.R
 import com.example.nnapp.utils.theme.MyAppTheme
 import com.google.firebase.auth.FirebaseAuth
 
@@ -33,7 +37,7 @@ fun HomeScreen(navController: NavController) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Hola Pepe!") },
+                    title = { Text("Hola Adrián!") },
                     actions = {
                         IconButton(onClick = {
                             FirebaseAuth.getInstance().signOut()
@@ -47,10 +51,9 @@ fun HomeScreen(navController: NavController) {
                     }
                 )
             },
-            bottomBar = { BottomNavigationBar(navController = navController, selectedRoute = "home") }
+            bottomBar = { BottomNavigationBar(navController) }
         ) { paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
-                // Pestañas superiores
                 val tabs = listOf("PROYECTOS", "PRESUPUESTOS")
                 TabRow(
                     selectedTabIndex = selectedTabIndex,
@@ -66,7 +69,6 @@ fun HomeScreen(navController: NavController) {
                     }
                 }
 
-                // Contenido dinámico según la pestaña seleccionada
                 when (selectedTabIndex) {
                     0 -> ContentSection("Proyecto")
                     1 -> ContentSection("Presupuesto")
@@ -79,13 +81,13 @@ fun HomeScreen(navController: NavController) {
 @Composable
 fun ContentSection(label: String) {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        // LazyRow - 30% de la pantalla
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.3f)
+                .fillMaxHeight(0.22f)
                 .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             items(3) { index ->
                 Card(
@@ -105,7 +107,6 @@ fun ContentSection(label: String) {
             }
         }
 
-        // LazyColumn - espacio restante, mostrando 3 elementos visibles
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -114,7 +115,7 @@ fun ContentSection(label: String) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(80.dp),
+                        .height(120.dp),
                     shape = RoundedCornerShape(12.dp),
                     elevation = CardDefaults.cardElevation(4.dp)
                 ) {
@@ -141,37 +142,40 @@ fun ToggleThemeButton(isDarkTheme: Boolean, onToggle: () -> Unit) {
 }
 
 @Composable
-fun BottomNavigationBar(navController: NavController, selectedRoute: String) {
+fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
-        "home" to R.drawable.home_icon,
-        "projects" to R.drawable.book_icon,
-        "camera" to R.drawable.camera_icon,
-        "chat" to R.drawable.chat_icon,
-        "settings" to R.drawable.settings_icon
+        "home" to Icons.Filled.Home,
+        "projects" to Icons.Filled.Work,
+        "camera" to Icons.Filled.Camera,
+        "chat" to Icons.AutoMirrored.Filled.Chat,
+        "settings" to Icons.Filled.Settings
     )
 
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
     NavigationBar {
-        items.forEach { (route, iconRes) ->
+        items.forEach { (route, icon) ->
             NavigationBarItem(
                 icon = {
                     Icon(
-                        painter = painterResource(iconRes),
+                        imageVector = icon,
                         contentDescription = route,
-                        modifier = Modifier.size(25.dp) // Cambia el tamaño del icono
+                        modifier = Modifier.size(30.dp)
                     )
                 },
-                selected = selectedRoute == route,
+                selected = currentRoute == route,
                 onClick = {
-                    navController.navigate(route) {
-                        popUpTo("home") { inclusive = false }
-                        launchSingleTop = true
+                    if (currentRoute != route) {
+                        navController.navigate(route) {
+                            popUpTo("home") { inclusive = false }
+                            launchSingleTop = true
+                        }
                     }
                 }
             )
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

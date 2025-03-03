@@ -4,16 +4,17 @@ sealed class NavigationRoute(val route: String) {
     data object Splash : NavigationRoute("splash")
     data object Auth : NavigationRoute("auth")
     data object Home : NavigationRoute("home")
-    // Usaremos "budgetBoard" para la planilla de presupuestos.
+    data object Camera : NavigationRoute("camera")
+    data object Chat : NavigationRoute("chat")
+    data object Settings : NavigationRoute("settings")
+    data object Projects : NavigationRoute("projects")
+
     data object BudgetBoard : NavigationRoute("budgetBoard")
-    // Usamos query parameter para que budgetId sea opcional.
+
+    // Rutas con parámetros opcionales
     data object BudgetForm : NavigationRoute("budgetForm?budgetId={budgetId}") {
         fun createRoute(budgetId: String? = null): String {
-            return if (budgetId.isNullOrEmpty()) {
-                "budgetForm"
-            } else {
-                "budgetForm?budgetId=$budgetId"
-            }
+            return budgetId?.let { "budgetForm?budgetId=$it" } ?: "budgetForm"
         }
     }
 }
