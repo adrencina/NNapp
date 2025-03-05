@@ -1,178 +1,95 @@
 package com.example.nnapp.ui.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Chat
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Camera
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Work
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.nnapp.ui.components.BottomNavigationBar
+import com.example.nnapp.ui.components.FloatingActionButton
+import com.example.nnapp.ui.components.TopBar
+import com.example.nnapp.ui.home.sections.LazyRowSection
+import com.example.nnapp.ui.home.sections.LazyColumnSection
 import com.example.nnapp.utils.theme.MyAppTheme
-import com.google.firebase.auth.FirebaseAuth
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(navController: NavController) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var isDarkTheme by remember { mutableStateOf(false) }
 
+    val proyectos = listOf("Proyecto 1", "Proyecto 2", "Proyecto 3", "Proyecto 4", "Proyecto 5")
+    val presupuestos = listOf("Presupuesto A", "Presupuesto B", "Presupuesto C", "Presupuesto D", "Presupuesto E")
+
     MyAppTheme(darkTheme = isDarkTheme) {
         Scaffold(
+            containerColor = MaterialTheme.colorScheme.background,
             topBar = {
-                TopAppBar(
-                    title = { Text("Hola Adrián!") },
-                    actions = {
-                        IconButton(onClick = {
-                            FirebaseAuth.getInstance().signOut()
-                            navController.navigate("auth") {
-                                popUpTo("home") { inclusive = true }
-                            }
-                        }) {
-                            Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = "Cerrar sesión")
-                        }
-                        ToggleThemeButton(isDarkTheme) { isDarkTheme = !isDarkTheme }
-                    }
+                TopBar(
+                    text = "Hola Adrián!",
+                    navController = navController,
+                    onThemeToggle = { isDarkTheme = !isDarkTheme }
                 )
             },
-            bottomBar = { BottomNavigationBar(navController) }
+            bottomBar = { BottomNavigationBar(navController) },
+            floatingActionButton = {
+                FloatingActionButton(
+                    icon = Icons.Default.Add,
+                    onClick = { /* Acción al presionar el FAB */ }
+                )
+            }
         ) { paddingValues ->
-            Column(modifier = Modifier.padding(paddingValues)) {
-                val tabs = listOf("PROYECTOS", "PRESUPUESTOS")
-                TabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.primary
-                ) {
-                    tabs.forEachIndexed { index, title ->
-                        Tab(
-                            selected = selectedTabIndex == index,
-                            onClick = { selectedTabIndex = index },
-                            text = { Text(title) }
-                        )
-                    }
-                }
+            BoxWithConstraints(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                val screenHeight = maxHeight
+                val cardSize = screenHeight * 0.25f // Tamaño cuadrado dinámico basado en el 25% de la pantalla
 
-                when (selectedTabIndex) {
-                    0 -> ContentSection("Proyecto")
-                    1 -> ContentSection("Presupuesto")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ContentSection(label: String) {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.22f)
-                .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            items(3) { index ->
-                Card(
+                Column(
                     modifier = Modifier
-                        .width(120.dp)
-                        .height(100.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    elevation = CardDefaults.cardElevation(4.dp)
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp)
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                    val tabs = listOf("PROYECTOS", "PRESUPUESTOS")
+                    TabRow(
+                        selectedTabIndex = selectedTabIndex,
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.primary
                     ) {
-                        Text("$label ${index + 1}", style = MaterialTheme.typography.bodyLarge)
-                    }
-                }
-            }
-        }
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(3) { index ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    elevation = CardDefaults.cardElevation(4.dp)
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("$label ${index + 1}", style = MaterialTheme.typography.bodyLarge)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ToggleThemeButton(isDarkTheme: Boolean, onToggle: () -> Unit) {
-    IconButton(onClick = onToggle) {
-        Icon(
-            imageVector = if (isDarkTheme) Icons.Filled.LightMode else Icons.Filled.DarkMode,
-            contentDescription = "Toggle Theme"
-        )
-    }
-}
-
-@Composable
-fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(
-        "home" to Icons.Filled.Home,
-        "projects" to Icons.Filled.Work,
-        "camera" to Icons.Filled.Camera,
-        "chat" to Icons.AutoMirrored.Filled.Chat,
-        "settings" to Icons.Filled.Settings
-    )
-
-    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-
-    NavigationBar {
-        items.forEach { (route, icon) ->
-            NavigationBarItem(
-                icon = {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = route,
-                        modifier = Modifier.size(30.dp)
-                    )
-                },
-                selected = currentRoute == route,
-                onClick = {
-                    if (currentRoute != route) {
-                        navController.navigate(route) {
-                            popUpTo("home") { inclusive = false }
-                            launchSingleTop = true
+                        tabs.forEachIndexed { index, title ->
+                            Tab(
+                                selected = selectedTabIndex == index,
+                                onClick = { selectedTabIndex = index },
+                                text = { Text(title) }
+                            )
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    val data = if (selectedTabIndex == 0) proyectos else presupuestos
+
+                    LazyRowSection(data = data)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    // Mostramos el mensaje de "En desarrollo"
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                        contentAlignment = androidx.compose.ui.Alignment.Center) {
+                        LazyColumnSection()
+                    }
+
                 }
-            )
+            }
         }
     }
 }
