@@ -14,57 +14,92 @@ class BudgetRepository @Inject constructor(
 
     // Crea un nuevo presupuesto y retorna el ID generado
     suspend fun createBudget(budget: Budget): String {
-        val docRef = budgetCollection.add(budget).await()
-        return docRef.id
+        return try {
+            val docRef = budgetCollection.add(budget).await()
+            docRef.id
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
     }
 
     // Obtiene todos los presupuestos
     suspend fun getBudgets(): List<Budget> {
-        return budgetCollection.get().await().documents.mapNotNull { doc ->
-            doc.toObject(Budget::class.java)?.copy(id = doc.id)
+        return try {
+            budgetCollection.get().await().documents.mapNotNull { doc ->
+                doc.toObject(Budget::class.java)?.copy(id = doc.id)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
         }
     }
 
-    // Obtiene un presupuesto por ID (se expone para edición)
+    // Obtiene un presupuesto por ID
     suspend fun getBudgetById(id: String): Budget? {
-        val doc = budgetCollection.document(id).get().await()
-        return if (doc.exists()) doc.toObject(Budget::class.java)?.copy(id = doc.id) else null
+        return try {
+            val doc = budgetCollection.document(id).get().await()
+            if (doc.exists()) doc.toObject(Budget::class.java)?.copy(id = doc.id) else null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     // Actualiza un presupuesto completo
     suspend fun updateBudget(budget: Budget) {
-        budgetCollection.document(budget.id).update(
-            "name", budget.clientName,
-            "materials", budget.materials
-        ).await()
+        try {
+            budgetCollection.document(budget.id).update(
+                "clientName", budget.clientName,  // Se corrige la clave
+                "materials", budget.materials
+            ).await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
-    // Agrega un material al presupuesto (usando un array en Firestore)
+    // Agrega un material al presupuesto
     suspend fun addMaterial(budgetId: String, material: Material) {
-        val docRef = budgetCollection.document(budgetId)
-        docRef.update("materials", FieldValue.arrayUnion(material)).await()
+        try {
+            val docRef = budgetCollection.document(budgetId)
+            docRef.update("materials", FieldValue.arrayUnion(material)).await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     // Actualiza un material específico dentro del presupuesto
     suspend fun updateMaterial(budgetId: String, material: Material) {
-        val docRef = budgetCollection.document(budgetId)
-        val budget = getBudgetById(budgetId) ?: return
-        val updatedMaterials = budget.materials.map {
-            if (it.code == material.code) material else it
+        try {
+            val docRef = budgetCollection.document(budgetId)
+            val budget = getBudgetById(budgetId) ?: return
+            val updatedMaterials = budget.materials.map {
+                if (it.code == material.code) material else it
+            }
+            docRef.update("materials", updatedMaterials).await()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        docRef.update("materials", updatedMaterials).await()
     }
 
     // Elimina un material del presupuesto
     suspend fun deleteMaterial(budgetId: String, material: Material) {
-        val docRef = budgetCollection.document(budgetId)
-        val budget = getBudgetById(budgetId) ?: return
-        val updatedMaterials = budget.materials.filterNot { it.code == material.code }
-        docRef.update("materials", updatedMaterials).await()
+        try {
+            val docRef = budgetCollection.document(budgetId)
+            val budget = getBudgetById(budgetId) ?: return
+            val updatedMaterials = budget.materials.filterNot { it.code == material.code }
+            docRef.update("materials", updatedMaterials).await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     // Elimina un presupuesto completo
     suspend fun deleteBudget(id: String) {
-        budgetCollection.document(id).delete().await()
+        try {
+            budgetCollection.document(id).delete().await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

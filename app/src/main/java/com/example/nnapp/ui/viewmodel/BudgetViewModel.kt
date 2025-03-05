@@ -30,7 +30,7 @@ class BudgetViewModel @Inject constructor(
         _budgets.value = repository.getBudgets()
     }
 
-    // Función suspend para guardar presupuesto y recargar la lista
+    // Guarda presupuesto y recarga la lista
     suspend fun saveBudgetSuspend(budget: Budget) {
         if (budget.id.isEmpty()) {
             repository.createBudget(budget)

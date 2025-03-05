@@ -23,5 +23,6 @@ fun AppNavigation() {
         addChatGraph(navController)
 
         addBudgetGraph(navController)
+
     }
 }
