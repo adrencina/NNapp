@@ -20,13 +20,17 @@ import com.example.nnapp.ui.home.sections.BudgetLazyRowSection
 import com.example.nnapp.ui.home.sections.LazyRowSection
 import com.example.nnapp.ui.home.sections.LazyColumnSection
 import com.example.nnapp.ui.viewmodel.BudgetViewModel
-import com.example.nnapp.utils.theme.MyAppTheme
+import com.example.nnapp.ui.viewmodel.ThemeViewModel
+import com.example.nnapp.utils.theme.NNappTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(navController: NavController) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    var isDarkTheme by remember { mutableStateOf(false) }
+
+    // Eliminar el estado local de tema y obtenerlo del ThemeViewModel
+    val themeViewModel: ThemeViewModel = hiltViewModel()
+    val isDarkTheme by themeViewModel.darkMode.collectAsState(initial = false)
 
     // Datos de ejemplo para la pestaña de proyectos
     val proyectos = listOf("Proyecto 1", "Proyecto 2", "Proyecto 3", "Proyecto 4", "Proyecto 5")
@@ -38,14 +42,14 @@ fun HomeScreen(navController: NavController) {
     // Ordenar presupuestos para que el último creado aparezca primero
     val sortedBudgets = budgets.sortedByDescending { it.creationDate }
 
-    MyAppTheme(darkTheme = isDarkTheme) {
+    NNappTheme(darkTheme = isDarkTheme) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
             topBar = {
                 TopBar(
                     text = "Hola Adrián!",
                     navController = navController,
-                    onThemeToggle = { isDarkTheme = !isDarkTheme }
+                    onThemeToggle = { themeViewModel.toggleTheme() } // Llama al toggle del ThemeViewModel
                 )
             },
             bottomBar = { BottomNavigationBar(navController) },
@@ -64,7 +68,7 @@ fun HomeScreen(navController: NavController) {
                     .padding(paddingValues)
             ) {
                 val screenHeight = maxHeight
-                val cardSize = screenHeight * 0.25f // Definir tamaño dinámico para las tarjetas de presupuesto
+                val cardSize = screenHeight * 0.25f // Tamaño dinámico para las tarjetas de presupuesto
 
                 Column(
                     modifier = Modifier

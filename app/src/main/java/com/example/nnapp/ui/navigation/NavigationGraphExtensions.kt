@@ -7,15 +7,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.NavType
 import com.example.nnapp.ui.auth.AuthScreen
+import com.example.nnapp.ui.budget.BudgetCreationScreen
 import com.example.nnapp.ui.camera.CameraScreen
 import com.example.nnapp.ui.chat.ChatScreen
 import com.example.nnapp.ui.home.HomeScreen
 import com.example.nnapp.ui.projects.ProjectsScreen
 import com.example.nnapp.ui.settings.SettingsScreen
 import com.example.nnapp.ui.splash.SplashScreen
-import com.example.nnapp.ui.budget.BudgetCreationScreen
 import com.example.nnapp.ui.budget.BudgetEditScreen
 import com.example.nnapp.ui.budget.BudgetViewScreen
+import com.example.nnapp.ui.budget.MaterialEntryScreen
 import com.example.nnapp.ui.viewmodel.AuthViewModel
 
 fun NavGraphBuilder.addAuthGraph(navController: NavController) {
@@ -61,8 +62,9 @@ fun NavGraphBuilder.addCameraGraph(navController: NavController) {
 fun NavGraphBuilder.addBudgetGraph(navController: NavController) {
     // Pantalla de creación de presupuesto
     composable(NavigationRoute.CreateBudget.route) {
-        BudgetCreationScreen(navController)
+        BudgetCreationScreen(navController = navController)
     }
+
     // Pantalla de edición de presupuesto, con el parámetro "budgetId"
     composable(
         route = "${NavigationRoute.EditBudget.route}/{budgetId}",
@@ -78,5 +80,10 @@ fun NavGraphBuilder.addBudgetGraph(navController: NavController) {
     ) { backStackEntry ->
         val budgetId = backStackEntry.arguments?.getString("budgetId") ?: ""
         BudgetViewScreen(navController, budgetId)
+    }
+    // Pantalla de entrada de materiales, con el parámetro "budgetId"
+    composable("material_entry/{budgetId}") { backStackEntry ->
+        val budgetId = backStackEntry.arguments?.getString("budgetId") ?: return@composable
+        MaterialEntryScreen(navController, budgetId)
     }
 }

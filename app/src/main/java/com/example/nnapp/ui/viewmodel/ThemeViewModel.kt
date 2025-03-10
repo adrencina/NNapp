@@ -2,26 +2,26 @@ package com.example.nnapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nnapp.data.datastore.ThemePreferences
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.example.nnapp.data.datastore.ThemePreferenceManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ThemeViewModel(private val themePreferences: ThemePreferences) : ViewModel() {
-    private val _darkMode = MutableStateFlow(false)
-    val darkMode: StateFlow<Boolean> get() = _darkMode
+@HiltViewModel
+class ThemeViewModel @Inject constructor(
+    private val themePreferenceManager: ThemePreferenceManager
+) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            themePreferences.darkModeFlow.collect { isDark ->
-                _darkMode.value = isDark
-            }
-        }
-    }
+    // Estado del tema (por defecto claro si no hay valor)
+    val darkMode = themePreferenceManager.darkModeFlow
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
+    // Alterna el tema y guarda la preferencia
     fun toggleTheme() {
         viewModelScope.launch {
-            themePreferences.saveDarkMode(!_darkMode.value)
+            themePreferenceManager.setDarkMode(!darkMode.value)
         }
     }
 }

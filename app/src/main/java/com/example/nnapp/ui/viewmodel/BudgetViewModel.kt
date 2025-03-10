@@ -3,6 +3,7 @@ package com.example.nnapp.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nnapp.data.model.Budget
+import com.example.nnapp.data.model.Material
 import com.example.nnapp.data.repository.BudgetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -50,4 +51,16 @@ class BudgetViewModel @Inject constructor(
             loadBudgets()
         }
     }
+
+    fun addMaterialToBudget(budgetId: String, material: Material) {
+        viewModelScope.launch {
+            repository.addMaterial(budgetId, material)
+            loadBudgets()
+        }
+    }
+
+    suspend fun createBudget(budget: Budget): String {
+        return repository.createBudget(budget) // Llama a la función del repositorio
+    }
+
 }

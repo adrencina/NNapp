@@ -12,6 +12,8 @@ sealed class NavigationRoute(val route: String) {
     data object Projects : NavigationRoute("projects")
 
     data object CreateBudget : NavigationRoute("create_budget")
+    data object MaterialEntry : NavigationRoute("material_entry/{budgetId}")
+
     data object EditBudget : NavigationRoute("edit_budget")
     data object ViewBudget : NavigationRoute("view_budget")
 
