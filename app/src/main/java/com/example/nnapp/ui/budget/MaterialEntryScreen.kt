@@ -237,7 +237,9 @@ fun MaterialEntryScreen(
                         contentDescription = "Atrás"
                     )
                 }
-                IconButton(onClick = { /* Acción siguiente */ }) {
+                IconButton(onClick = {
+                    navController.navigate("finalize_budget/$budgetId")
+                }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = "Siguiente"

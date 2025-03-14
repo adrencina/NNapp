@@ -8,16 +8,18 @@ import androidx.navigation.navArgument
 import androidx.navigation.NavType
 import com.example.nnapp.ui.auth.AuthScreen
 import com.example.nnapp.ui.budget.BudgetCreationScreen
+import com.example.nnapp.ui.budget.BudgetEditScreen
+import com.example.nnapp.ui.budget.BudgetViewScreen
+import com.example.nnapp.ui.budget.MaterialEntryScreen
+import com.example.nnapp.ui.budget.BudgetFinalizeScreen
 import com.example.nnapp.ui.camera.CameraScreen
 import com.example.nnapp.ui.chat.ChatScreen
 import com.example.nnapp.ui.home.HomeScreen
 import com.example.nnapp.ui.projects.ProjectsScreen
 import com.example.nnapp.ui.settings.SettingsScreen
 import com.example.nnapp.ui.splash.SplashScreen
-import com.example.nnapp.ui.budget.BudgetEditScreen
-import com.example.nnapp.ui.budget.BudgetViewScreen
-import com.example.nnapp.ui.budget.MaterialEntryScreen
 import com.example.nnapp.ui.viewmodel.AuthViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 fun NavGraphBuilder.addAuthGraph(navController: NavController) {
     composable(NavigationRoute.Splash.route) {
@@ -65,7 +67,7 @@ fun NavGraphBuilder.addBudgetGraph(navController: NavController) {
         BudgetCreationScreen(navController = navController)
     }
 
-    // Pantalla de edición de presupuesto, con el parámetro "budgetId"
+    // Pantalla de edición de presupuesto
     composable(
         route = "${NavigationRoute.EditBudget.route}/{budgetId}",
         arguments = listOf(navArgument("budgetId") { type = NavType.StringType })
@@ -73,7 +75,8 @@ fun NavGraphBuilder.addBudgetGraph(navController: NavController) {
         val budgetId = backStackEntry.arguments?.getString("budgetId") ?: ""
         BudgetEditScreen(navController, budgetId)
     }
-    // Pantalla de visualización de presupuesto, con el parámetro "budgetId"
+
+    // Pantalla de visualización de presupuesto
     composable(
         route = "${NavigationRoute.ViewBudget.route}/{budgetId}",
         arguments = listOf(navArgument("budgetId") { type = NavType.StringType })
@@ -81,9 +84,22 @@ fun NavGraphBuilder.addBudgetGraph(navController: NavController) {
         val budgetId = backStackEntry.arguments?.getString("budgetId") ?: ""
         BudgetViewScreen(navController, budgetId)
     }
-    // Pantalla de entrada de materiales, con el parámetro "budgetId"
-    composable("material_entry/{budgetId}") { backStackEntry ->
-        val budgetId = backStackEntry.arguments?.getString("budgetId") ?: return@composable
+
+    // Pantalla de entrada de materiales
+    composable(
+        route = NavigationRoute.MaterialEntry.route,
+        arguments = listOf(navArgument("budgetId") { type = NavType.StringType })
+    ) { backStackEntry ->
+        val budgetId = backStackEntry.arguments?.getString("budgetId") ?: ""
         MaterialEntryScreen(navController, budgetId)
+    }
+
+    // Pantalla final del presupuesto (etapa final)
+    composable(
+        route = "${NavigationRoute.FinalizeBudget.route}/{budgetId}",
+        arguments = listOf(navArgument("budgetId") { type = NavType.StringType })
+    ) { backStackEntry ->
+        val budgetId = backStackEntry.arguments?.getString("budgetId") ?: ""
+        BudgetFinalizeScreen(navController, budgetId)
     }
 }
