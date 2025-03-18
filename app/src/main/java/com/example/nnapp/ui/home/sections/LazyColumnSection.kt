@@ -1,7 +1,10 @@
 package com.example.nnapp.ui.home.sections
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -12,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Sección en desarrollo que muestra un ícono y texto indicando que la sección aún está en construcción.
+ */
 @Composable
 fun LazyColumnSection() {
     Column(
@@ -21,12 +27,12 @@ fun LazyColumnSection() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            imageVector = Icons.Default.Construction, // Ícono de construcción
+            imageVector = androidx.compose.material.icons.Icons.Default.Construction,
             contentDescription = "En desarrollo",
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(64.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Sección en desarrollo...",
             fontSize = 18.sp,

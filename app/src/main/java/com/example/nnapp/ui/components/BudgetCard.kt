@@ -1,5 +1,6 @@
 package com.example.nnapp.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +19,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.nnapp.data.model.Budget
+import com.example.nnapp.utils.theme.BackgroundColor
+import com.example.nnapp.utils.theme.ElectricGrayLight
 
+/**
+ * Tarjeta que muestra información resumida de un presupuesto.
+ *
+ * Se adapta al estilo de la navbar inferior flotante:
+ * - Fondo solido por la elevation de la tarjeta.
+ * - Borde sólido de 2.dp en gris claro (ElectricGrayLight).
+ * - Bordes redondeados (forma "pastilla" con RoundedCornerShape de 16.dp).
+ * - Los textos y los íconos se muestran en gris claro para coherencia con la estética.
+ */
 @Composable
 fun BudgetCard(
     budget: Budget,
@@ -31,23 +43,28 @@ fun BudgetCard(
         modifier = Modifier
             .size(size)
             .padding(4.dp),
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(width = 2.dp, color = ElectricGrayLight),
+        colors = CardDefaults.cardColors(
+            // Usamos un fondo solido por la elevation de la tarjeta
+            containerColor = BackgroundColor
+        ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        // Contenido de la tarjeta de presupuesto
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
+                .padding(12.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Mostrar el nombre del cliente (u otra info relevante)
+            // Texto con el nombre del cliente en gris claro
             Text(
                 text = budget.clientName,
                 style = MaterialTheme.typography.titleMedium,
-                maxLines = 1
+                color = ElectricGrayLight,
+                maxLines = 2
             )
-            // Fila con los íconos de editar, ver y eliminar
+            // Fila con botones para editar, ver y eliminar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -57,22 +74,25 @@ fun BudgetCard(
                     imageVector = Icons.Default.Edit,
                     contentDescription = "Editar presupuesto",
                     modifier = Modifier
-                        .size(20.dp)
-                        .clickable { onEdit(budget) }
+                        .size(24.dp)
+                        .clickable { onEdit(budget) },
+                    tint = ElectricGrayLight
                 )
                 Icon(
                     imageVector = Icons.Default.Visibility,
                     contentDescription = "Ver presupuesto",
                     modifier = Modifier
-                        .size(20.dp)
-                        .clickable { onView(budget) }
+                        .size(24.dp)
+                        .clickable { onView(budget) },
+                    tint = ElectricGrayLight
                 )
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Eliminar presupuesto",
                     modifier = Modifier
-                        .size(20.dp)
-                        .clickable { onDelete(budget) }
+                        .size(24.dp)
+                        .clickable { onDelete(budget) },
+                    tint = ElectricGrayLight
                 )
             }
         }

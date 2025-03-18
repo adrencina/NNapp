@@ -36,7 +36,7 @@ fun DatePickerComponent(onDateSelected: (String) -> Unit) {
             .clickable { datePicker.show() },
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = if (selectedDate.isEmpty()) "Seleccionar fecha" else selectedDate)
+        Text(text = selectedDate.ifEmpty { "Seleccionar fecha" })
         Button(onClick = { datePicker.show() }) {
             Text("Elegir")
         }

@@ -13,6 +13,10 @@ import androidx.compose.ui.unit.dp
 import com.example.nnapp.data.model.Budget
 import com.example.nnapp.ui.components.BudgetCard
 
+/**
+ * Muestra una fila horizontal de tarjetas de presupuesto.
+ * Cada tarjeta se muestra en un tamaño dinámico (cardSize) y se separa con un espaciado de 16.dp.
+ */
 @Composable
 fun BudgetLazyRowSection(
     budgets: List<Budget>,
@@ -22,10 +26,9 @@ fun BudgetLazyRowSection(
     onDelete: (Budget) -> Unit
 ) {
     LazyRow(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp),
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         items(budgets) { budget ->

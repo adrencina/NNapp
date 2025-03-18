@@ -16,7 +16,7 @@ fun PlaceholderScreen(navController: NavController, title: String) {
     val showBottomBar = currentRoute in listOf(
         NavigationRoute.Home.route,
         NavigationRoute.Chat.route,
-        NavigationRoute.Projects.route,
+        NavigationRoute.Academy.route,
         NavigationRoute.Camera.route,
         NavigationRoute.Settings.route
     )

@@ -1,11 +1,14 @@
 package com.example.nnapp.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.NavType
+import com.example.nnapp.ui.academy.AcademyScreen
 import com.example.nnapp.ui.auth.AuthScreen
 import com.example.nnapp.ui.budget.BudgetCreationScreen
 import com.example.nnapp.ui.budget.BudgetEditScreen
@@ -15,11 +18,11 @@ import com.example.nnapp.ui.budget.BudgetFinalizeScreen
 import com.example.nnapp.ui.camera.CameraScreen
 import com.example.nnapp.ui.chat.ChatScreen
 import com.example.nnapp.ui.home.HomeScreen
-import com.example.nnapp.ui.projects.ProjectsScreen
+import com.example.nnapp.ui.projects.ProjectDetailsScreen
 import com.example.nnapp.ui.settings.SettingsScreen
 import com.example.nnapp.ui.splash.SplashScreen
 import com.example.nnapp.ui.viewmodel.AuthViewModel
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.nnapp.ui.projects.CreateProjectScreen
 
 fun NavGraphBuilder.addAuthGraph(navController: NavController) {
     composable(NavigationRoute.Splash.route) {
@@ -49,9 +52,9 @@ fun NavGraphBuilder.addSettingsGraph(navController: NavController) {
     }
 }
 
-fun NavGraphBuilder.addProjectsGraph(navController: NavController) {
-    composable(NavigationRoute.Projects.route) {
-        ProjectsScreen(navController)
+fun NavGraphBuilder.addAcademyGraph(navController: NavController) {
+    composable(NavigationRoute.Academy.route) {
+        AcademyScreen(navController)
     }
 }
 
@@ -61,12 +64,12 @@ fun NavGraphBuilder.addCameraGraph(navController: NavController) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 fun NavGraphBuilder.addBudgetGraph(navController: NavController) {
     // Pantalla de creación de presupuesto
     composable(NavigationRoute.CreateBudget.route) {
         BudgetCreationScreen(navController = navController)
     }
-
     // Pantalla de edición de presupuesto
     composable(
         route = "${NavigationRoute.EditBudget.route}/{budgetId}",
@@ -75,7 +78,6 @@ fun NavGraphBuilder.addBudgetGraph(navController: NavController) {
         val budgetId = backStackEntry.arguments?.getString("budgetId") ?: ""
         BudgetEditScreen(navController, budgetId)
     }
-
     // Pantalla de visualización de presupuesto
     composable(
         route = "${NavigationRoute.ViewBudget.route}/{budgetId}",
@@ -84,7 +86,6 @@ fun NavGraphBuilder.addBudgetGraph(navController: NavController) {
         val budgetId = backStackEntry.arguments?.getString("budgetId") ?: ""
         BudgetViewScreen(navController, budgetId)
     }
-
     // Pantalla de entrada de materiales
     composable(
         route = NavigationRoute.MaterialEntry.route,
@@ -93,7 +94,6 @@ fun NavGraphBuilder.addBudgetGraph(navController: NavController) {
         val budgetId = backStackEntry.arguments?.getString("budgetId") ?: ""
         MaterialEntryScreen(navController, budgetId)
     }
-
     // Pantalla final del presupuesto (etapa final)
     composable(
         route = "${NavigationRoute.FinalizeBudget.route}/{budgetId}",
@@ -101,5 +101,16 @@ fun NavGraphBuilder.addBudgetGraph(navController: NavController) {
     ) { backStackEntry ->
         val budgetId = backStackEntry.arguments?.getString("budgetId") ?: ""
         BudgetFinalizeScreen(navController, budgetId)
+    }
+}
+
+fun NavGraphBuilder.addProjectGraph(navController: NavController) {
+    // Pantalla de creación de proyecto
+    composable(NavigationRoute.CreateProject.route) {
+        CreateProjectScreen(navController = navController)
+    }
+    // Pantalla de detalles adicionales del proyecto
+    composable(NavigationRoute.ProjectDetails.route) {
+        ProjectDetailsScreen(navController = navController)
     }
 }
