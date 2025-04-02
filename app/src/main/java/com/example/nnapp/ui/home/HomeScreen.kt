@@ -79,11 +79,10 @@ fun HomeScreen(navController: NavController,
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                // Tamaño dinámico de las tarjetas en base a la altura de la pantalla
-                val screenHeight = maxHeight
+                val screenHeight = this.maxHeight // Accede directamente al scope
                 val cardSize = screenHeight * 0.25f
 
-                Column(
+            Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 16.dp)

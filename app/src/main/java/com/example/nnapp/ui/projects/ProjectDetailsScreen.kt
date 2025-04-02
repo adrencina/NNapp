@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.nnapp.ui.components.ProjectInputField
 import com.example.nnapp.utils.theme.AppTypography
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,4 +1,4 @@
-package com.example.nnapp.ui.budget
+package com.example.nnapp.ui.budget.edition
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons

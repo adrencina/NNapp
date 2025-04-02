@@ -1,4 +1,4 @@
-package com.example.nnapp.ui.budget
+package com.example.nnapp.ui.budget.creation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,10 +21,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nnapp.data.model.Material
+import com.example.nnapp.ui.components.ProgressBar
 import com.example.nnapp.ui.viewmodel.BudgetViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MaterialEntryScreen(
     navController: NavController,
@@ -31,6 +32,7 @@ fun MaterialEntryScreen(
 ) {
     val viewModel: BudgetViewModel = hiltViewModel()
     val scope = rememberCoroutineScope()
+    val currentStep = 2
 
     // Estados para campos de entrada
     var materialName by remember { mutableStateOf("") }
@@ -54,21 +56,7 @@ fun MaterialEntryScreen(
     // Calcular subtotal general
     val total = materials.sumOf { it.quantity * it.unitPrice }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("CREAR PRESUPUESTO", fontSize = 18.sp) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver"
-                        )
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -76,7 +64,10 @@ fun MaterialEntryScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Subtítulo
+            // Indicador de progreso (Paso 2 de 3)
+            ProgressBar(step = currentStep)
+
+            // Título
             Text(
                 text = "INGRESE LOS MATERIALES O SERVICIOS",
                 style = MaterialTheme.typography.titleMedium.copy(fontSize = 16.sp)
@@ -226,7 +217,7 @@ fun MaterialEntryScreen(
                 Text("$${total}", fontSize = 14.sp)
             }
 
-            // Botones de navegación (flechas)
+            // Botones de navegación (flechas: atrás y siguiente)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween

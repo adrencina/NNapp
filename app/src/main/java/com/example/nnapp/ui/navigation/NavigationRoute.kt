@@ -15,9 +15,11 @@ sealed class NavigationRoute(val route: String) {
     // Rutas relacionadas con presupuestos
     data object CreateBudget : NavigationRoute("create_budget")
     data object MaterialEntry : NavigationRoute("material_entry/{budgetId}")
+    data object FinalizeBudget : NavigationRoute("finalize_budget")
+
+    // Rutas para edición y visualización
     data object EditBudget : NavigationRoute("edit_budget")
     data object ViewBudget : NavigationRoute("view_budget")
-    data object FinalizeBudget : NavigationRoute("finalize_budget")
 
     // Rutas nuevas para proyectos
     data object CreateProject : NavigationRoute("create_project")

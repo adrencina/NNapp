@@ -1,9 +1,7 @@
 package com.example.nnapp.ui.projects
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
@@ -12,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.nnapp.ui.components.ProjectInputField
 import com.example.nnapp.utils.theme.AppTypography
 
 
@@ -69,28 +68,4 @@ fun CreateProjectScreen(navController: NavController) {
             }
         }
     }
-}
-
-/**
- * Componente reutilizable para los campos de entrada del formulario.
- */
-@Composable
-fun ProjectInputField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    keyboardType: KeyboardType = KeyboardType.Text
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .background(MaterialTheme.colorScheme.background),
-        shape = RoundedCornerShape(8.dp),
-        textStyle = AppTypography.bodyLarge,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
-    )
 }

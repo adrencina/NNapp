@@ -1,4 +1,4 @@
-package com.example.nnapp.ui.budget
+package com.example.nnapp.ui.budget.creation
 
 import android.os.Build
 import android.widget.Toast
@@ -16,16 +16,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.nnapp.ui.components.DatePickerComponent
 import com.example.nnapp.ui.components.PdfPreviewDialog
+import com.example.nnapp.ui.components.ProgressBar
 import com.example.nnapp.ui.viewmodel.BudgetFinalizeViewModel
 import com.example.nnapp.ui.viewmodel.BudgetViewModel
 import com.example.nnapp.utils.pdfutils.sharePdf
 import kotlinx.coroutines.launch
 
-/**
- * Pantalla final del presupuesto.
- * Permite configurar opciones finales y genera el PDF utilizando los datos reales (cliente, materiales y opciones configuradas).
- * Ofrece dos botones: uno para guardar el PDF y otro para guardar y compartir.
- */
 @RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,12 +31,13 @@ fun BudgetFinalizeScreen(
     finalizeViewModel: BudgetFinalizeViewModel = hiltViewModel(),
     budgetViewModel: BudgetViewModel = hiltViewModel()
 ) {
+    val currentStep = 3
     var showPreview by remember { mutableStateOf(false) }
     val state by finalizeViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    // Al cargar la pantalla, se obtiene el presupuesto real y se carga en el ViewModel final.
+    // Al cargar la pantalla se obtiene el presupuesto real y se carga en el ViewModel final
     LaunchedEffect(budgetId) {
         val budget = budgetViewModel.getBudgetById(budgetId)
         if (budget != null) {
@@ -76,6 +73,9 @@ fun BudgetFinalizeScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // Indicador de progreso (Paso 3 de 3)
+                ProgressBar(step = currentStep)
+
                 // Opción: Fecha de validez
                 CheckboxOption("Fecha de validez", state.hasExpiryDate) { finalizeViewModel.toggleExpiryDate(it) }
                 if (state.hasExpiryDate) {
@@ -100,7 +100,7 @@ fun BudgetFinalizeScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Botón "Guardar PDF": Solo guarda y muestra un Toast de confirmación.
+                // Botón "Guardar PDF"
                 Button(
                     onClick = {
                         finalizeViewModel.generateAndSavePdf(context)
@@ -116,7 +116,7 @@ fun BudgetFinalizeScreen(
                     Text("Guardar PDF", fontSize = 14.sp)
                 }
 
-                // Botón "Guardar y compartir PDF": Guarda (si es necesario) y comparte el PDF.
+                // Botón "Guardar y compartir PDF"
                 Button(
                     onClick = {
                         coroutineScope.launch {
