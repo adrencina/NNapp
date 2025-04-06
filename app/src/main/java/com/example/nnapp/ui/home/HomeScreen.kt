@@ -21,39 +21,37 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nnapp.ui.components.BottomNavigationBar
 import com.example.nnapp.ui.components.FloatingActionButton
 import com.example.nnapp.ui.components.TopBar
-import com.example.nnapp.ui.home.sections.BudgetLazyRowSection
-import com.example.nnapp.ui.home.sections.LazyRowSection
 import com.example.nnapp.ui.home.sections.LazyColumnSection
-import com.example.nnapp.ui.viewmodel.BudgetViewModel
+import com.example.nnapp.ui.home.sections.LazyRowSection
+import com.example.nnapp.ui.home.sections.BudgetLazyRowSection
+import com.example.nnapp.ui.navigation.NavigationRoute
+import com.example.nnapp.ui.budget.viewmodel.BudgetViewModel
 import com.example.nnapp.ui.viewmodel.ThemeViewModel
 import com.example.nnapp.utils.theme.ElectricGrayLight
 import com.example.nnapp.utils.theme.NNappTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navController: NavController,
-               themeViewModel: ThemeViewModel = hiltViewModel(),
-               budgetViewModel: BudgetViewModel = hiltViewModel()
+fun HomeScreen(
+    navController: NavController,
+    themeViewModel: ThemeViewModel = hiltViewModel(),
+    budgetViewModel: BudgetViewModel = hiltViewModel()
 ) {
     // Estado para la pestaña seleccionada
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-    // Obtener el estado del tema (claro/oscuro) desde el ThemeViewModel
+    // Estado del tema (claro/oscuro)
     val isDarkTheme by themeViewModel.darkMode.collectAsState(initial = false)
 
     // Datos de ejemplo para la pestaña "PROYECTOS"
     val proyectos = listOf("Proyecto 1", "Proyecto 2", "Proyecto 3", "Proyecto 4", "Proyecto 5")
 
-    // Obtener presupuestos reales del BudgetViewModel y ordenarlos
-    val budgets by budgetViewModel.budgets.collectAsState()
-    val sortedBudgets = budgets.sortedByDescending { it.creationDate }
-
-    // Aplicar el tema de la app (NNappTheme usa nuestra paleta y tipografía)
+    // Se elimina el acceso a 'budgets' ya que no se encuentra definido en BudgetViewModel.
+    // Valida que la sección de presupuestos muestre un placeholder o contenido alternativo.
     NNappTheme(darkTheme = isDarkTheme) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
             topBar = {
-                // Barra superior con título y botón para cambiar el tema
                 TopBar(
                     text = "Hola Adrián!",
                     navController = navController,
@@ -61,15 +59,17 @@ fun HomeScreen(navController: NavController,
                 )
             },
             bottomBar = { BottomNavigationBar(navController) },
-            floatingActionButton = @androidx.compose.runtime.Composable {
+            floatingActionButton = {
                 when (selectedTabIndex) {
-                    0 -> FloatingActionButton( // FAB para proyectos
+                    0 -> FloatingActionButton(
                         icon = Icons.Default.Add,
                         onClick = { navController.navigate("create_project") }
                     )
-                    1 -> FloatingActionButton( // FAB para presupuestos
+                    1 -> FloatingActionButton(
                         icon = Icons.Default.Add,
-                        onClick = { navController.navigate("create_budget") }
+                        // Navega a la pantalla de datos del cliente, inicio del flujo de presupuesto
+                        onClick = { navController.navigate(NavigationRoute.BudgetFlow.route) }
+
                     )
                 }
             }
@@ -79,10 +79,10 @@ fun HomeScreen(navController: NavController,
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                val screenHeight = this.maxHeight // Accede directamente al scope
+                val screenHeight = this.maxHeight
                 val cardSize = screenHeight * 0.25f
 
-            Column(
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 16.dp)
@@ -91,7 +91,7 @@ fun HomeScreen(navController: NavController,
                     val tabs = listOf("PROYECTOS", "PRESUPUESTOS")
                     TabRow(
                         selectedTabIndex = selectedTabIndex,
-                        containerColor = Color.Transparent, // Fondo transparente para ver el fondo del Scaffold
+                        containerColor = Color.Transparent,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         indicator = { tabPositions ->
                             SecondaryIndicator(
@@ -107,12 +107,14 @@ fun HomeScreen(navController: NavController,
                                 text = {
                                     Text(
                                         text = title,
-                                        // Si está seleccionado se usa el color primario; de lo contrario, ElectricGrayLight (gris claro)
                                         color = if (selectedTabIndex == index)
                                             MaterialTheme.colorScheme.primary
                                         else
                                             ElectricGrayLight,
-                                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                        style = MaterialTheme.typography.bodyLarge.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 14.sp
+                                        )
                                     )
                                 }
                             )
@@ -121,7 +123,7 @@ fun HomeScreen(navController: NavController,
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Mostrar contenido según la pestaña seleccionada
+                    // Contenido según la pestaña seleccionada
                     when (selectedTabIndex) {
                         0 -> { // Sección de Proyectos
                             LazyRowSection(data = proyectos)
@@ -136,12 +138,13 @@ fun HomeScreen(navController: NavController,
                             }
                         }
                         1 -> { // Sección de Presupuestos
+                            // Si en el futuro se implementa la lista de presupuestos, se usará BudgetLazyRowSection
                             BudgetLazyRowSection(
-                                budgets = sortedBudgets,
+                                budgets = emptyList(), // Actualmente se envía lista vacía
                                 cardSize = cardSize,
-                                onEdit = { budget -> navController.navigate("edit_budget/${budget.id}") },
-                                onView = { budget -> navController.navigate("view_budget/${budget.id}") },
-                                onDelete = { budget -> budgetViewModel.deleteBudget(budget.id) }
+                                onEdit = { /* Implementar navegación para editar presupuesto */ },
+                                onView = { /* Implementar navegación para ver presupuesto */ },
+                                onDelete = { /* Implementar eliminación si se requiere */ }
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Box(

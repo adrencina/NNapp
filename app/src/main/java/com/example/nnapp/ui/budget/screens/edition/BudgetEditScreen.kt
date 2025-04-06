@@ -1,4 +1,4 @@
-package com.example.nnapp.ui.budget.view
+package com.example.nnapp.ui.budget.screens.edition
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -10,11 +10,11 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BudgetViewScreen(navController: NavController, budgetId: String) {
+fun BudgetEditScreen(navController: NavController, budgetId: String) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Ver Presupuesto") }, // Título en español
+                title = { Text("Editar Presupuesto") }, // Título en español
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
@@ -23,9 +23,9 @@ fun BudgetViewScreen(navController: NavController, budgetId: String) {
             )
         }
     ) { paddingValues ->
-        // Aquí se mostrará el detalle del presupuesto (por implementar)
+        // Aquí se implementará la edición del presupuesto (por implementar)
         Text(
-            text = "Pantalla de visualización para presupuesto: $budgetId",
+            text = "Pantalla de edición para presupuesto: $budgetId",
             modifier = Modifier.padding(paddingValues)
         )
     }

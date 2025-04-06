@@ -57,6 +57,7 @@ roomCompiler = "2.6.1"  # Nueva versión para el compilador de Room
 # Other dependencies
 runtimeLivedata = "1.7.7"
 filamentAndroid = "1.17.1"
+ui = "<1.10.0>"
 webkit = "1.12.1"
 runtimeLivedataVersion = "1.7.8"
 
@@ -126,6 +127,7 @@ filament-android = { group = "com.google.ar.sceneform", name = "filament-android
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedataVersion" }
+ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

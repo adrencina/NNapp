@@ -30,13 +30,13 @@ class BudgetSyncViewModel @Inject constructor(
         }
     }
 
-    fun saveBudget(budget: BudgetEntity) {
-        viewModelScope.launch {
-            localRepository.insertBudget(budget)
-            // Convertir a tu modelo de dominio si es necesario y guardarlo en Firebase
-            cloudRepository.createBudget(budget.toBudget())
-        }
-    }
+//    fun saveBudget(budget: BudgetEntity) {
+//        viewModelScope.launch {
+//            localRepository.insertBudget(budget)
+//            // Convertir a tu modelo de dominio si es necesario y guardarlo en Firebase
+//            cloudRepository.createBudget(budget.toBudget())
+//        }
+//    }
 
     fun updateBudget(budget: BudgetEntity) {
         viewModelScope.launch {
@@ -52,17 +52,17 @@ class BudgetSyncViewModel @Inject constructor(
         }
     }
 
-//     Método de extensión para convertir BudgetEntity a Budget (asume que tienes una clase Budget en tu dominio)
-    private fun BudgetEntity.toBudget(): com.example.nnapp.data.model.Budget {
-        return com.example.nnapp.data.model.Budget(
-            id = this.id.toString(),
-            clientName = this.clientName,
-            address = this.clientAddress,
-            dni = "", // Agregar si aplica
-            phone = this.clientPhone,
-            materials = this.materials,
-            confirmed = false,
-            creationDate = this.creationDate
-        )
-    }
+////     Método de extensión para convertir BudgetEntity a Budget (asume que tienes una clase Budget en tu dominio)
+//    private fun BudgetEntity.toBudget(): com.example.nnapp.data.model.Budget {
+//        return com.example.nnapp.data.model.Budget(
+//            id = this.id.toString(),
+//            client = this.clientName,
+//            address = this.clientAddress,
+//            dni = "", // Agregar si aplica
+//            phone = this.clientPhone,
+//            materials = this.materials,
+//            confirmed = false,
+//            creationDate = this.creationDate
+//        )
+//    }
 }

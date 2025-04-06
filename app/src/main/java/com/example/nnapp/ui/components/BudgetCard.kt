@@ -59,7 +59,7 @@ fun BudgetCard(
         ) {
             // Texto con el nombre del cliente en gris claro
             Text(
-                text = budget.clientName,
+                text = budget.client.name,
                 style = MaterialTheme.typography.titleMedium,
                 color = ElectricGrayLight,
                 maxLines = 2

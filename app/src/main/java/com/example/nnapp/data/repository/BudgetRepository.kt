@@ -50,7 +50,7 @@ class BudgetRepository @Inject constructor(
     suspend fun updateBudget(budget: Budget) {
         try {
             budgetCollection.document(budget.id).update(
-                "clientName", budget.clientName,  // Se corrige la clave
+                "clientName", budget.client.name,
                 "materials", budget.materials
             ).await()
         } catch (e: Exception) {
